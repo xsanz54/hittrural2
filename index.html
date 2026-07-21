@@ -5,37 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hitster Secreto</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 80px; }
-        button { background-color: #1DB954; color: white; border: none; padding: 20px 40px; font-size: 20px; border-radius: 40px; cursor: pointer; font-weight: bold; }
+        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        button { background-color: #1DB954; color: white; border: none; padding: 20px 40px; font-size: 18px; border-radius: 40px; cursor: pointer; font-weight: bold; margin-top: 20px;}
         button:hover { background-color: #1ed760; }
-        #info { margin-top: 30px; color: #b3b3b3; font-size: 18px; padding: 0 20px; }
+        #info { margin-top: 30px; color: #b3b3b3; font-size: 16px; padding: 0 20px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
     <h1>🎧 Hitster Party</h1>
-    <div id="info">Pulsa el botón para reproducir la pista en secreto:</div>
-    <br><br>
-    <button onclick="reproducir()">REPRODUCIR PISTA</button>
+    <div id="info">Cargando...</div>
+    <button id="loginBtn" onclick="login()" style="display:none;">1. CONECTAR CON SPOTIFY</button>
+    <button id="playBtn" onclick="reproducir()" style="display:none;">2. REPRODUCIR PISTA</button>
 
     <script>
-        // Tus canciones configuradas
+        // CONFIGURACIÓN EXACTA
+        const clientId = 'df32a706b07c4806b0268f1c18c90503';
+        const redirectUri = window.location.origin + window.location.pathname;
+
+        // Base de datos de canciones (añade aquí tus códigos con el formato spotify:track:...)
         const canciones = {
-            "carta1": "5dAtKXyrQoQW054LZqJ5dP", 
-            "carta2": "0VjIjW4GlUZAMYd2vXMi3b"  
+            "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP",
+            "carta2": "spotify:track:0VjIjW4GlUZAMYd2vXMi3b"
         };
 
         const urlParams = new URLSearchParams(window.location.search);
-        const cartaId = urlParams.get('id');
+        const code = urlParams.get('code');
+        let cartaId = urlParams.get('id') || localStorage.getItem('current_carta');
+
+        // Guardamos qué carta querías reproducir antes de iniciar sesión
+        if (urlParams.get('id')) {
+            localStorage.setItem('current_carta', urlParams.get('id'));
+        }
+
+        // --- SISTEMA DE AUTENTICACIÓN SEGURA DE SPOTIFY (PKCE) ---
+        async function generateCodeChallenge(codeVerifier) {
+            const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
+            return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function generateRandomString(length) {
+            let text = '';
+            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            for (let i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
+        async function login() {
+            const verifier = generateRandomString(128);
+            localStorage.setItem('code_verifier', verifier);
+            const challenge = await generateCodeChallenge(verifier);
+            const params = new URLSearchParams({
+                client_id: clientId,
+                response_type: 'code',
+                redirect_uri: redirectUri,
+                scope: 'user-modify-playback-state user-read-playback-state',
+                code_challenge_method: 'S256',
+                code_challenge: challenge
+            });
+            window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
+        }
+
+        // --- INTERCAMBIAR EL CÓDIGO POR EL PERMISO INVISIBLE ---
+        if (code) {
+            document.getElementById('info').innerText = "Validando conexión...";
+            const verifier = localStorage.getItem('code_verifier');
+            fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    client_id: clientId,
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: redirectUri,
+                    code_verifier: verifier
+                })
+            }).then(r => r.json()).then(data => {
+                localStorage.setItem('spotify_token', data.access_token);
+                // Limpiar la URL y recargar
+                window.location.href = redirectUri + "?id=" + cartaId; 
+            }).catch(err => {
+                document.getElementById('info').innerText = "Error en la conexión. Reinicia la página.";
+            });
+        } else {
+            iniciarApp();
+        }
+
+        // --- LÓGICA PRINCIPAL DEL JUEGO ---
+        function iniciarApp() {
+            const token = localStorage.getItem('spotify_token');
+            
+            if (!token) {
+                document.getElementById('info').innerText = "Para que la música suene de forma invisible sin chivarte el título, necesitamos conectar la web con tu app de Spotify.";
+                document.getElementById('loginBtn').style.display = 'inline-block';
+            } else {
+                if (cartaId && canciones[cartaId]) {
+                    document.getElementById('info').innerHTML = "¡Lista!<br><br><b>Asegúrate de tener Spotify abierto en segundo plano</b>.<br>Luego pulsa reproducir.";
+                    document.getElementById('playBtn').style.display = 'inline-block';
+                } else if (cartaId) {
+                    document.getElementById('info').innerText = "Error: Esta carta no está guardada en el código.";
+                } else {
+                    document.getElementById('info').innerText = "Conectado y listo. Escanea cualquier código QR para empezar.";
+                }
+            }
+        }
 
         function reproducir() {
-            if (cartaId && canciones[cartaId]) {
-                const trackId = canciones[cartaId];
-                // Abre directamente la app de Spotify en el móvil con la canción
-                window.location.href = `spotify:track:${trackId}`;
-            } else {
-                alert("Código de carta no válido o no encontrado.");
-            }
+            const token = localStorage.getItem('spotify_token');
+            const trackUri = canciones[cartaId];
+
+            // Orden remota e invisible a la app de Spotify
+            fetch('https://api.spotify.com/v1/me/player/play', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uris: [trackUri] })
+            }).then(response => {
+                if (response.ok || response.status === 204) {
+                    document.getElementById('info').innerText = "🎵 Reproduciendo en secreto...";
+                    document.getElementById('playBtn').style.display = 'none';
+                } else if (response.status === 401) {
+                    localStorage.removeItem('spotify_token');
+                    alert("El permiso de Spotify ha caducado. Vamos a reconectar.");
+                    login();
+                } else if (response.status === 404 || response.status === 403) {
+                    document.getElementById('info').innerHTML = "<b>⚠️ Error: No encuentro tu reproductor.</b><br><br>Abre la aplicación de Spotify en tu móvil, pon CUALQUIER canción a reproducir durante un segundo y dale a pausa. Vuelve aquí e inténtalo de nuevo.";
+                }
+            }).catch(err => {
+                document.getElementById('info').innerText = "Hubo un error de conexión con Spotify.";
+            });
         }
     </script>
 </body>
