@@ -5,71 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hitster Secreto</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        button { background-color: #1DB954; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px;}
+        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 80px; }
+        button { background-color: #1DB954; color: white; border: none; padding: 20px 40px; font-size: 20px; border-radius: 40px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #1ed760; }
-        #info { margin-top: 20px; color: #b3b3b3; padding: 0 20px; }
+        #info { margin-top: 30px; color: #b3b3b3; font-size: 18px; padding: 0 20px; }
     </style>
 </head>
 <body>
 
     <h1>🎧 Hitster Party</h1>
-    <div id="info">Preparando reproductor...</div>
-    <button id="playBtn" style="display:none;" onclick="reproducir()">REPRODUCIR PISTA</button>
+    <div id="info">Pulsa el botón para reproducir la pista en secreto:</div>
+    <br><br>
+    <button onclick="reproducir()">REPRODUCIR PISTA</button>
 
-    <!-- SDK de Spotify -->
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
-        const clientId = 'df32a706b07c4806b0268f1c18c90503'; 
-        const redirectUri = window.location.origin + window.location.pathname;
-        
-        let token = localStorage.getItem('spotify_token');
-        let deviceId = null;
-        let player = null;
-
-        // Base de datos de tus canciones (Añade aquí tus códigos de Spotify)
+        // Tus canciones configuradas
         const canciones = {
-            "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP?si=336b44f769794485", 
-            "carta2": "spotify:track:0VjIjW4GlUZAMYd2vXMi3b"  
+            "carta1": "5dAtKXyrQoQW054LZqJ5dP", 
+            "carta2": "0VjIjW4GlUZAMYd2vXMi3b"  
         };
 
         const urlParams = new URLSearchParams(window.location.search);
         const cartaId = urlParams.get('id');
 
-        // Capturar el código de autorización que devuelve Spotify
-        const urlParamsCode = new URLSearchParams(window.location.search);
-        const code = urlParamsCode.get('code');
-
-        if (!token && !code) {
-            // Paso 1: Redirigir a Spotify pidiendo el "code" (método actualizado)
-            window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=streaming%20user-read-private%20user-modify-playback-state`;
-        } else if (code && !token) {
-            // Nota: Como estamos en una web estática sin servidor backend oculto, 
-            // el intercambio de código requeriría un servidor. Para evitar complicaciones técnicas,
-            // usaremos el método alternativo nativo de la app abierta:
-            document.getElementById('info').innerText = "¡Autenticación correcta! Abre tu aplicación de Spotify en este dispositivo y vuelve aquí para jugar.";
-            localStorage.setItem('spotify_token', 'activo');
-            token = 'activo';
-        }
-
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            // Verificación simplificada para entorno local/personal con Spotify abierto
-            document.getElementById('info').innerText = "¡Listo! Escanea un código QR.";
-            if (cartaId && canciones[cartaId]) {
-                document.getElementById('playBtn').style.display = 'inline-block';
-            } else if (cartaId) {
-                document.getElementById('info').innerText = "Error: Esta carta no está registrada.";
-            }
-        };
-
         function reproducir() {
-            if (!cartaId) return;
-            const uriCancion = canciones[cartaId];
-            
-            // Método directo de apertura segura mediante esquema URI de Spotify en el móvil
-            window.location.href = `spotify:track:${uriCancion.split(':')[2]}`;
-            document.getElementById('info').innerText = "🎵 Reproduciendo canción en Spotify...";
-            document.getElementById('playBtn').style.display = 'none';
+            if (cartaId && canciones[cartaId]) {
+                const trackId = canciones[cartaId];
+                // Abre directamente la app de Spotify en el móvil con la canción
+                window.location.href = `spotify:track:${trackId}`;
+            } else {
+                alert("Código de carta no válido o no encontrado.");
+            }
         }
     </script>
 </body>
