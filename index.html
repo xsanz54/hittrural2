@@ -2,36 +2,140 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hitster Secreto</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        button { background-color: #1DB954; color: white; border: none; padding: 20px 40px; font-size: 18px; border-radius: 40px; cursor: pointer; font-weight: bold; margin-top: 20px;}
-        button:hover { background-color: #1ed760; }
-        #pauseBtn { background-color: #e50914; } 
-        #pauseBtn:hover { background-color: #f6121d; }
-        #info { margin-top: 30px; color: #b3b3b3; font-size: 16px; padding: 0 20px; line-height: 1.6; }
-        /* Estilo para el temporizador */
-        #timerDisplay { font-size: 32px; font-family: monospace; margin-top: 25px; display: none; color: #1DB954; font-weight: bold; }
+        /* Variables de color para mantener la estética */
+        :root {
+            --bg-dark: #0a0a0a;
+            --card-bg: #181818;
+            --spotify-green: #1DB954;
+            --spotify-green-hover: #1ed760;
+            --danger-red: #e50914;
+            --danger-red-hover: #f6121d;
+            --text-main: #ffffff;
+            --text-muted: #a7a7a7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Quita el parpadeo azul al pulsar en móviles */
+        }
+
+        body { 
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #121212 100%);
+            color: var(--text-main); 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Contenedor principal estilo tarjeta */
+        .app-container {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        #info { 
+            color: var(--text-muted); 
+            font-size: 15px; 
+            line-height: 1.6; 
+            margin-bottom: 30px;
+            min-height: 60px; /* Mantiene el tamaño aunque el texto cambie */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Estilo general de los botones */
+        button { 
+            width: 100%;
+            padding: 18px 20px; 
+            font-size: 16px; 
+            border-radius: 50px; 
+            border: none; 
+            color: white; 
+            font-weight: 700; 
+            letter-spacing: 1px;
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+        }
+
+        button:active {
+            transform: scale(0.96); /* Efecto de hundirse al pulsar */
+        }
+
+        #loginBtn, #playBtn { 
+            background-color: var(--spotify-green); 
+        }
+
+        #loginBtn:hover, #playBtn:hover { 
+            background-color: var(--spotify-green-hover); 
+            box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
+        }
+
+        #pauseBtn { 
+            background-color: var(--danger-red); 
+        }
+
+        #pauseBtn:hover { 
+            background-color: var(--danger-red-hover); 
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Temporizador estilo digital/neón */
+        #timerDisplay { 
+            font-size: 46px; 
+            font-family: 'Courier New', Courier, monospace; 
+            margin-top: 20px; 
+            display: none; 
+            color: var(--spotify-green); 
+            font-weight: bold; 
+            text-shadow: 0 0 15px rgba(29, 185, 84, 0.5); /* Efecto brillo */
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🎧 Hitster Party</h1>
-    <div id="info">Cargando...</div>
-    <button id="loginBtn" onclick="login()" style="display:none;">1. CONECTAR CON SPOTIFY</button>
-    <button id="playBtn" onclick="reproducir()" style="display:none;">2. REPRODUCIR PISTA</button>
-    <button id="pauseBtn" onclick="pausar()" style="display:none;">⏸ PAUSAR</button>
-    
-    <!-- El temporizador -->
-    <div id="timerDisplay">00:00</div>
+    <div class="app-container">
+        <h1>🎧 Hitster Party</h1>
+        <div id="info">Cargando...</div>
+        
+        <button id="loginBtn" onclick="login()" style="display:none;">Conectar Spotify</button>
+        <button id="playBtn" onclick="reproducir()" style="display:none;">▶️ Reproducir Pista</button>
+        <button id="pauseBtn" onclick="pausar()" style="display:none;">⏸ Pausar Pista</button>
+        
+        <div id="timerDisplay">00:00</div>
+    </div>
 
     <script>
         // CONFIGURACIÓN EXACTA
         const clientId = 'df32a706b07c4806b0268f1c18c90503';
         const redirectUri = window.location.origin + window.location.pathname;
 
-        // Base de datos de canciones (Tus 100 cartas)
+        // Base de datos de canciones (Tus 100 cartas actualizadas)
         const canciones = {
             "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP",
             "carta2": "spotify:track:4biWmzhZc3fDRTXRi0wnRg",
@@ -76,7 +180,7 @@
             "carta41": "spotify:track:4pBykn8eWxl3O9JvIHZXj4",
             "carta42": "spotify:track:39cmB3ZoTOLwOTq7tMNqKa",
             "carta43": "spotify:track:1s2B5cndbqK8rPJEIcKJRQ",
-            "carta44": "spotify:track:1Ok5WQlGEnuFOiUlpCKcVT",
+            "carta44": "spotify:track:4hZpTCrAVGU04WchCdBuKO",
             "carta45": "spotify:track:7xHfguzndSR2jOpMxzqh3r",
             "carta46": "spotify:track:2ewEh7LuvToYyGHq7yT8N1",
             "carta47": "spotify:track:0tgbSxoFjZ20MjfoKwWevV",
@@ -101,7 +205,7 @@
             "carta66": "spotify:track:2ud5ukcAgwOki5PyE53mPl",
             "carta67": "spotify:track:2fR4NdUZJditzpS2iBWxiY",
             "carta68": "spotify:track:17tBEKEKJXnHgJjGrH5rB9",
-            "carta69": "spotify:track:05bETZtzSdUI5fconFIKRX",
+            "carta69": "spotify:track:5tMFR1V777V8IdkVVuiV7d",
             "carta70": "spotify:track:5OcUNWgmDCr6ID4LnYYlup",
             "carta71": "spotify:track:3oNDynp3Y6F9NvCMqvoxYI",
             "carta72": "spotify:track:1vVUsYlYEkrZVJWYUvBKUu",
@@ -115,13 +219,13 @@
             "carta80": "spotify:track:4azCAIDvF17pohUA2Jfump",
             "carta81": "spotify:track:7mc5jjo6PkhbMF9vQzUK3Q",
             "carta82": "spotify:track:0ZPfoFzZ4qmdyzYmG8whmn",
-            "carta83": "spotify:track:1YB42DQZ7h7VX95BRiu1Hi",
+            "carta83": "spotify:track:39glqzRVRAy4vq3PqeTGb8",
             "carta84": "spotify:track:58hjBuGWj43LQ6WjN3ZQAK",
             "carta85": "spotify:track:4n7jnSxVLd8QioibtTDBDq",
             "carta86": "spotify:track:6wefD5q8rXOg3xHTUZjyio",
             "carta87": "spotify:track:3E8WZzcp6nscGt9YvBX9MW",
             "carta88": "spotify:track:3tFq8IZqLaqnZO0rxbcanH",
-            "carta89": "spotify:track:11gWrKZMBsGQWmobv3oNfW",
+            "carta89": "spotify:track:3tiC6D3N07kUIJXKNDRHjy",
             "carta90": "spotify:track:4fb0iBhHbQeiJHOfLr6R75",
             "carta91": "spotify:track:1VB4sadHjFcFklHcZuoROi",
             "carta92": "spotify:track:42VgiRyg0YjtRVLiPFNxPJ",
@@ -143,10 +247,10 @@
             localStorage.setItem('current_carta', urlParams.get('id'));
         }
 
-        // Variables del temporizador y control de pausa
+        // Variables de estado
         let timerInterval = null;
         let secondsPlayed = 0;
-        let isPaused = false;
+        let isPaused = false; 
 
         function updateTimerDisplay() {
             const minutes = Math.floor(secondsPlayed / 60);
@@ -173,7 +277,6 @@
             }
         }
 
-        // --- SISTEMA DE AUTENTICACIÓN ---
         async function generateCodeChallenge(codeVerifier) {
             const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
             return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -218,22 +321,20 @@
                 localStorage.setItem('spotify_token', data.access_token);
                 window.location.href = redirectUri + "?id=" + cartaId; 
             }).catch(err => {
-                document.getElementById('info').innerText = "Error en la conexión. Reinicia la página.";
+                document.getElementById('info').innerHTML = "Error en la conexión.<br>Reinicia la página.";
             });
         } else {
             iniciarApp();
         }
 
-        // --- LÓGICA PRINCIPAL DEL JUEGO ---
         function iniciarApp() {
             const token = localStorage.getItem('spotify_token');
-            
             if (!token) {
-                document.getElementById('info').innerText = "Para que la música suene de forma invisible sin chivarte el título, necesitamos conectar la web con tu app de Spotify.";
+                document.getElementById('info').innerText = "Conecta la web con Spotify para que la música suene de forma invisible.";
                 document.getElementById('loginBtn').style.display = 'inline-block';
             } else {
                 if (cartaId && canciones[cartaId]) {
-                    document.getElementById('info').innerHTML = "¡Lista!<br><br><b>Asegúrate de tener Spotify abierto en segundo plano</b>.<br>Luego pulsa reproducir.";
+                    document.getElementById('info').innerHTML = "¡Lista!<br><br>Asegúrate de tener Spotify abierto de fondo y pulsa reproducir.";
                     document.getElementById('playBtn').style.display = 'inline-block';
                 } else if (cartaId) {
                     document.getElementById('info').innerText = "Error: Esta carta no está guardada en el código.";
@@ -243,7 +344,7 @@
             }
         }
 
-        // --- FUNCIÓN PARA REPRODUCIR / REANUDAR ---
+        // --- REPRODUCIR / REANUDAR ---
         function reproducir() {
             const token = localStorage.getItem('spotify_token');
             const trackUri = canciones[cartaId];
@@ -251,37 +352,36 @@
             let fetchOptions = {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${token}`
                 }
             };
 
-            // Si es la primera vez que se reproduce esta carta, mandamos la orden con la canción.
-            // Si estaba pausada, NO mandamos cuerpo (body) para que Spotify simplemente reanude.
             if (!isPaused) {
+                fetchOptions.headers['Content-Type'] = 'application/json';
                 fetchOptions.body = JSON.stringify({ uris: [trackUri] });
-                secondsPlayed = 0; // Reiniciamos el temporizador a cero
+                secondsPlayed = 0; 
                 updateTimerDisplay();
             }
 
             fetch('https://api.spotify.com/v1/me/player/play', fetchOptions).then(response => {
                 if (response.ok || response.status === 204) {
-                    document.getElementById('info').innerText = "🎵 Reproduciendo en secreto...";
+                    document.getElementById('info').innerText = "🎵 Reproduciendo pista en secreto...";
                     document.getElementById('playBtn').style.display = 'none';
                     document.getElementById('pauseBtn').style.display = 'inline-block';
-                    isPaused = false;
-                    startTimer(); // Arrancamos el cronómetro
+                    
+                    isPaused = false; 
+                    startTimer(); 
                 } else if (response.status === 401) {
                     localStorage.removeItem('spotify_token');
                     alert("El permiso de Spotify ha caducado. Vamos a reconectar.");
                     login();
                 } else if (response.status === 404 || response.status === 403) {
-                    document.getElementById('info').innerHTML = "<b>⚠️ Error: No encuentro tu reproductor.</b><br><br>Abre la aplicación de Spotify en tu móvil, pon CUALQUIER canción a reproducir durante un segundo y dale a pausa. Vuelve aquí e inténtalo de nuevo.";
+                    document.getElementById('info').innerHTML = "<b>⚠️ No encuentro tu reproductor.</b><br><br>Abre Spotify en tu móvil, pon una canción 1 segundo, dale a pausa y vuelve aquí.";
                 }
             });
         }
 
-        // --- FUNCIÓN PARA PAUSAR ---
+        // --- PAUSAR ---
         function pausar() {
             const token = localStorage.getItem('spotify_token');
 
@@ -292,12 +392,13 @@
                 }
             }).then(response => {
                 if (response.ok || response.status === 204) {
-                    document.getElementById('info').innerText = "⏸ Pista pausada.";
+                    document.getElementById('info').innerText = "⏸ Pista en pausa.";
                     document.getElementById('pauseBtn').style.display = 'none'; 
-                    document.getElementById('playBtn').innerText = "▶️ REANUDAR PISTA"; 
+                    document.getElementById('playBtn').innerText = "▶️ Reanudar Pista"; 
                     document.getElementById('playBtn').style.display = 'inline-block'; 
-                    isPaused = true;
-                    stopTimer(); // Congelamos el cronómetro
+                    
+                    isPaused = true; 
+                    stopTimer(); 
                 }
             });
         }
