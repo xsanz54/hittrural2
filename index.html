@@ -8,22 +8,25 @@
         body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
         button { background-color: #1DB954; color: white; border: none; padding: 20px 40px; font-size: 18px; border-radius: 40px; cursor: pointer; font-weight: bold; margin-top: 20px;}
         button:hover { background-color: #1ed760; }
+        #pauseBtn { background-color: #e50914; } /* Color rojo para la pausa */
+        #pauseBtn:hover { background-color: #f6121d; }
         #info { margin-top: 30px; color: #b3b3b3; font-size: 16px; padding: 0 20px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <h1>🎧 Hitster Party</h1>
+    <h1>🎧 Hitster Festival Edition</h1>
     <div id="info">Cargando...</div>
     <button id="loginBtn" onclick="login()" style="display:none;">1. CONECTAR CON SPOTIFY</button>
     <button id="playBtn" onclick="reproducir()" style="display:none;">2. REPRODUCIR PISTA</button>
+    <button id="pauseBtn" onclick="pausar()" style="display:none;">⏸ PAUSAR</button>
 
     <script>
         // CONFIGURACIÓN EXACTA
         const clientId = 'df32a706b07c4806b0268f1c18c90503';
         const redirectUri = window.location.origin + window.location.pathname;
 
-        // Base de datos de canciones (añade aquí tus códigos con el formato spotify:track:...)
+        // Base de datos de canciones (Tus 49 cartas)
         const canciones = {
             "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP",
             "carta2": "spotify:track:4biWmzhZc3fDRTXRi0wnRg",
@@ -73,19 +76,69 @@
             "carta46": "spotify:track:2ewEh7LuvToYyGHq7yT8N1",
             "carta47": "spotify:track:0tgbSxoFjZ20MjfoKwWevV",
             "carta48": "spotify:track:1HezRYlgnmN4umk4l9HIPv",
-            "carta49": "spotify:track:6pooRNiLyYpxZeIA5kJ5EX"
+            "carta49": "spotify:track:6pooRNiLyYpxZeIA5kJ5EX",
+            "carta50": "spotify:track:4BxzNZpcm1j3JczZzGNe2k",
+            "carta51": "spotify:track:0OyHCmkCp2qZJ44ZKB26fX",
+            "carta52": "spotify:track:3EpRJN0najsfQrBCsTtVWI",
+            "carta53": "spotify:track:1q8NdCAQ9QUjpYiqzdd3mv",
+            "carta54": "spotify:track:419w8oZaqevgyZfdvFZEHa",
+            "carta55": "spotify:track:2U4kPiipwfc2oHmd0nGoj5",
+            "carta56": "spotify:track:6Gqr73FGnlhtdBNluxJVJI",
+            "carta57": "spotify:track:6d63QA85w4FXhlXYtz7nco",
+            "carta58": "spotify:track:5YJ4BVvTFmVCxUyhKejHfR",
+            "carta59": "spotify:track:4cyYC67XY3weSVmSLdKLP8",
+            "carta60": "spotify:track:4cdvEShhfVE4UIHcjoK7NA",
+            "carta61": "spotify:track:614NVFo5csQqRnryl4jXs2",
+            "carta62": "spotify:track:1tvdNGCcgAhYaYq7ouIYGJ",
+            "carta63": "spotify:track:17jhIwr7mApkaht65aGH5K",
+            "carta64": "spotify:track:6hpuesKPNa3WhV48O7Fa47",
+            "carta65": "spotify:track:5MRsxkPZyRs1VfnXFdgSHm",
+            "carta66": "spotify:track:2ud5ukcAgwOki5PyE53mPl",
+            "carta67": "spotify:track:2fR4NdUZJditzpS2iBWxiY",
+            "carta68": "spotify:track:17tBEKEKJXnHgJjGrH5rB9",
+            "carta69": "spotify:track:05bETZtzSdUI5fconFIKRX",
+            "carta70": "spotify:track:5OcUNWgmDCr6ID4LnYYlup",
+            "carta71": "spotify:track:3oNDynp3Y6F9NvCMqvoxYI",
+            "carta72": "spotify:track:1vVUsYlYEkrZVJWYUvBKUu",
+            "carta73": "spotify:track:5L5kU9WFu7IPZQXzzxaRQV",
+            "carta74": "spotify:track:3ysxSFBKeLfncpMk6yKKYf",
+            "carta75": "spotify:track:5X2QG4l6skcB7BmMeiOh7d",
+            "carta76": "spotify:track:6c0vdY5EZOx8g95uWcp3uI",
+            "carta77": "spotify:track:3jweNemSOUhPyr1330ZXRM",
+            "carta78": "spotify:track:3deLO11zxiXYWpdHlUxNER",
+            "carta79": "spotify:track:5QK32vB1hmlEe1ruP1usFk",
+            "carta80": "spotify:track:4azCAIDvF17pohUA2Jfump",
+            "carta81": "spotify:track:7mc5jjo6PkhbMF9vQzUK3Q",
+            "carta82": "spotify:track:0ZPfoFzZ4qmdyzYmG8whmn",
+            "carta83": "spotify:track:1YB42DQZ7h7VX95BRiu1Hi",
+            "carta84": "spotify:track:58hjBuGWj43LQ6WjN3ZQAK",
+            "carta85": "spotify:track:4n7jnSxVLd8QioibtTDBDq",
+            "carta86": "spotify:track:6wefD5q8rXOg3xHTUZjyio",
+            "carta87": "spotify:track:3E8WZzcp6nscGt9YvBX9MW",
+            "carta88": "spotify:track:3tFq8IZqLaqnZO0rxbcanH",
+            "carta89": "spotify:track:11gWrKZMBsGQWmobv3oNfW",
+            "carta90": "spotify:track:4fb0iBhHbQeiJHOfLr6R75",
+            "carta91": "spotify:track:1VB4sadHjFcFklHcZuoROi",
+            "carta92": "spotify:track:42VgiRyg0YjtRVLiPFNxPJ",
+            "carta93": "spotify:track:24UStI5AYA7g5ufFDh3LH0",
+            "carta94": "spotify:track:3hlWUNjAlbZ6nOjAbrivBv",
+            "carta95": "spotify:track:30MdAjBfVTvBCS3vID38At",
+            "carta96": "spotify:track:24UjTh2wPv6g78XeRNbyCQ",
+            "carta97": "spotify:track:73SGUxXPloaU5CfeKkJf5D",
+            "carta98": "spotify:track:6oGFDrlsSXovBIAY7gNYIq",
+            "carta99": "spotify:track:24URRMO355FFEoBfTYxb4p",
+            "carta100": "spotify:track:0VffaI2jwQknRrxpECYHsF"
         };
 
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         let cartaId = urlParams.get('id') || localStorage.getItem('current_carta');
 
-        // Guardamos qué carta querías reproducir antes de iniciar sesión
         if (urlParams.get('id')) {
             localStorage.setItem('current_carta', urlParams.get('id'));
         }
 
-        // --- SISTEMA DE AUTENTICACIÓN SEGURA DE SPOTIFY (PKCE) ---
+        // --- SISTEMA DE AUTENTICACIÓN ---
         async function generateCodeChallenge(codeVerifier) {
             const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
             return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -113,7 +166,6 @@
             window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
         }
 
-        // --- INTERCAMBIAR EL CÓDIGO POR EL PERMISO INVISIBLE ---
         if (code) {
             document.getElementById('info').innerText = "Validando conexión...";
             const verifier = localStorage.getItem('code_verifier');
@@ -129,7 +181,6 @@
                 })
             }).then(r => r.json()).then(data => {
                 localStorage.setItem('spotify_token', data.access_token);
-                // Limpiar la URL y recargar
                 window.location.href = redirectUri + "?id=" + cartaId; 
             }).catch(err => {
                 document.getElementById('info').innerText = "Error en la conexión. Reinicia la página.";
@@ -157,11 +208,11 @@
             }
         }
 
+        // --- FUNCIÓN PARA REPRODUCIR ---
         function reproducir() {
             const token = localStorage.getItem('spotify_token');
             const trackUri = canciones[cartaId];
 
-            // Orden remota e invisible a la app de Spotify
             fetch('https://api.spotify.com/v1/me/player/play', {
                 method: 'PUT',
                 headers: {
@@ -171,8 +222,9 @@
                 body: JSON.stringify({ uris: [trackUri] })
             }).then(response => {
                 if (response.ok || response.status === 204) {
-                    document.getElementById('info').innerText = "🎵 Reproduciendo en secreto...";
-                    document.getElementById('playBtn').style.display = 'none';
+                    document.getElementById('info').innerText = "🎵 Reproduciendo...";
+                    document.getElementById('playBtn').style.display = 'none'; // Ocultar Reproducir
+                    document.getElementById('pauseBtn').style.display = 'inline-block'; // Mostrar Pausa
                 } else if (response.status === 401) {
                     localStorage.removeItem('spotify_token');
                     alert("El permiso de Spotify ha caducado. Vamos a reconectar.");
@@ -180,8 +232,25 @@
                 } else if (response.status === 404 || response.status === 403) {
                     document.getElementById('info').innerHTML = "<b>⚠️ Error: No encuentro tu reproductor.</b><br><br>Abre la aplicación de Spotify en tu móvil, pon CUALQUIER canción a reproducir durante un segundo y dale a pausa. Vuelve aquí e inténtalo de nuevo.";
                 }
-            }).catch(err => {
-                document.getElementById('info').innerText = "Hubo un error de conexión con Spotify.";
+            });
+        }
+
+        // --- NUEVA FUNCIÓN PARA PAUSAR ---
+        function pausar() {
+            const token = localStorage.getItem('spotify_token');
+
+            fetch('https://api.spotify.com/v1/me/player/pause', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                if (response.ok || response.status === 204) {
+                    document.getElementById('info').innerText = "⏸ Pista pausada.";
+                    document.getElementById('pauseBtn').style.display = 'none'; // Ocultar Pausa
+                    document.getElementById('playBtn').innerText = "▶️ REANUDAR PISTA"; 
+                    document.getElementById('playBtn').style.display = 'inline-block'; // Mostrar Reproducir
+                }
             });
         }
     </script>
