@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hitster Secreto</title>
+    <title>Hitster Festival Edition</title>
+    
+    <!-- Importación de las fuentes Bebas Neue y Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Variables de color para mantener la estética */
         :root {
             --bg-dark: #0a0a0a;
             --card-bg: #181818;
@@ -21,11 +24,11 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent; /* Quita el parpadeo azul al pulsar en móviles */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body { 
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #121212 100%);
+            background: #121212; /* Fondo base */
             color: var(--text-main); 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             display: flex;
@@ -34,38 +37,80 @@
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.5s ease;
         }
 
-        /* Contenedor principal estilo tarjeta */
+        /* MAGIA FESTIVAL: Animación del fondo cuando está sonando */
+        @keyframes festival-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.playing-bg {
+            background: linear-gradient(45deg, #0a0a0a, #053315, #1DB954, #121212);
+            background-size: 300% 300%;
+            animation: festival-bg 4s ease infinite;
+        }
+
+        /* Contenedor principal */
         .app-container {
             background-color: var(--card-bg);
             border-radius: 24px;
             padding: 40px 25px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         h1 {
+            font-family: 'Outfit', sans-serif;
             font-size: 28px;
-            font-weight: 800;
+            font-weight: 700;
             margin-bottom: 15px;
-            letter-spacing: -0.5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         #info { 
             color: var(--text-muted); 
-            font-size: 15px; 
+            font-size: 16px; 
             line-height: 1.6; 
             margin-bottom: 30px;
-            min-height: 60px; /* Mantiene el tamaño aunque el texto cambie */
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Estilo general de los botones */
+        /* Animación del ecualizador de sonido */
+        .equalizer {
+            display: inline-flex;
+            align-items: flex-end;
+            height: 16px;
+            gap: 4px;
+            margin-right: 10px;
+        }
+        .bar {
+            width: 5px;
+            background-color: var(--spotify-green);
+            border-radius: 2px;
+            animation: bounce 0.4s infinite alternate;
+        }
+        .bar:nth-child(1) { animation-delay: 0.1s; height: 10px; }
+        .bar:nth-child(2) { animation-delay: 0.3s; height: 16px; }
+        .bar:nth-child(3) { animation-delay: 0.0s; height: 8px; }
+        .bar:nth-child(4) { animation-delay: 0.2s; height: 14px; }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        /* Botones */
         button { 
             width: 100%;
             padding: 18px 20px; 
@@ -80,47 +125,39 @@
             margin-bottom: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
         }
 
-        button:active {
-            transform: scale(0.96); /* Efecto de hundirse al pulsar */
-        }
+        button:active { transform: scale(0.96); }
 
-        #loginBtn, #playBtn { 
-            background-color: var(--spotify-green); 
-        }
-
+        #loginBtn, #playBtn { background-color: var(--spotify-green); }
         #loginBtn:hover, #playBtn:hover { 
             background-color: var(--spotify-green-hover); 
             box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
         }
 
-        #pauseBtn { 
-            background-color: var(--danger-red); 
-        }
-
+        #pauseBtn { background-color: var(--danger-red); }
         #pauseBtn:hover { 
             background-color: var(--danger-red-hover); 
             box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
         }
 
-        /* Temporizador estilo digital/neón */
+        /* Temporizador con fuente BEBAS NEUE */
         #timerDisplay { 
-            font-size: 46px; 
-            font-family: 'Courier New', Courier, monospace; 
+            font-family: 'Bebas Neue', cursive, sans-serif; 
+            font-size: 65px; 
             margin-top: 20px; 
             display: none; 
             color: var(--spotify-green); 
-            font-weight: bold; 
-            text-shadow: 0 0 15px rgba(29, 185, 84, 0.5); /* Efecto brillo */
-            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(29, 185, 84, 0.6); 
+            letter-spacing: 4px;
         }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <h1>🎧 Hitster Party</h1>
+        <h1>🎧 HITSTER FESTIVAL EDITION</h1>
         <div id="info">Cargando...</div>
         
         <button id="loginBtn" onclick="login()" style="display:none;">Conectar Spotify</button>
@@ -131,11 +168,9 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN EXACTA
         const clientId = 'df32a706b07c4806b0268f1c18c90503';
         const redirectUri = window.location.origin + window.location.pathname;
 
-        // Base de datos de canciones (Tus 100 cartas actualizadas)
         const canciones = {
             "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP",
             "carta2": "spotify:track:4biWmzhZc3fDRTXRi0wnRg",
@@ -247,7 +282,6 @@
             localStorage.setItem('current_carta', urlParams.get('id'));
         }
 
-        // Variables de estado
         let timerInterval = null;
         let secondsPlayed = 0;
         let isPaused = false; 
@@ -344,7 +378,6 @@
             }
         }
 
-        // --- REPRODUCIR / REANUDAR ---
         function reproducir() {
             const token = localStorage.getItem('spotify_token');
             const trackUri = canciones[cartaId];
@@ -365,9 +398,14 @@
 
             fetch('https://api.spotify.com/v1/me/player/play', fetchOptions).then(response => {
                 if (response.ok || response.status === 204) {
-                    document.getElementById('info').innerText = "🎵 Reproduciendo pista en secreto...";
+                    // Texto con ecualizador visual
+                    document.getElementById('info').innerHTML = "<div class='equalizer'><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div></div> <span style='display:inline-block; vertical-align:bottom;'>¡Sonando en secreto!</span>";
+                    
                     document.getElementById('playBtn').style.display = 'none';
                     document.getElementById('pauseBtn').style.display = 'inline-block';
+                    
+                    // Activar el fondo festivo
+                    document.body.classList.add('playing-bg');
                     
                     isPaused = false; 
                     startTimer(); 
@@ -381,7 +419,6 @@
             });
         }
 
-        // --- PAUSAR ---
         function pausar() {
             const token = localStorage.getItem('spotify_token');
 
@@ -396,6 +433,9 @@
                     document.getElementById('pauseBtn').style.display = 'none'; 
                     document.getElementById('playBtn').innerText = "▶️ Reanudar Pista"; 
                     document.getElementById('playBtn').style.display = 'inline-block'; 
+                    
+                    // Apagar el fondo festivo
+                    document.body.classList.remove('playing-bg');
                     
                     isPaused = true; 
                     stopTimer(); 
