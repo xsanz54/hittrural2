@@ -8,25 +8,30 @@
         body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
         button { background-color: #1DB954; color: white; border: none; padding: 20px 40px; font-size: 18px; border-radius: 40px; cursor: pointer; font-weight: bold; margin-top: 20px;}
         button:hover { background-color: #1ed760; }
-        #pauseBtn { background-color: #e50914; } /* Color rojo para la pausa */
+        #pauseBtn { background-color: #e50914; } 
         #pauseBtn:hover { background-color: #f6121d; }
         #info { margin-top: 30px; color: #b3b3b3; font-size: 16px; padding: 0 20px; line-height: 1.6; }
+        /* Estilo para el temporizador */
+        #timerDisplay { font-size: 32px; font-family: monospace; margin-top: 25px; display: none; color: #1DB954; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>🎧 Hitster Festival Edition</h1>
+    <h1>🎧 Hitster Party</h1>
     <div id="info">Cargando...</div>
     <button id="loginBtn" onclick="login()" style="display:none;">1. CONECTAR CON SPOTIFY</button>
     <button id="playBtn" onclick="reproducir()" style="display:none;">2. REPRODUCIR PISTA</button>
     <button id="pauseBtn" onclick="pausar()" style="display:none;">⏸ PAUSAR</button>
+    
+    <!-- El temporizador -->
+    <div id="timerDisplay">00:00</div>
 
     <script>
         // CONFIGURACIÓN EXACTA
         const clientId = 'df32a706b07c4806b0268f1c18c90503';
         const redirectUri = window.location.origin + window.location.pathname;
 
-        // Base de datos de canciones (Tus 49 cartas)
+        // Base de datos de canciones (Tus 100 cartas)
         const canciones = {
             "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP",
             "carta2": "spotify:track:4biWmzhZc3fDRTXRi0wnRg",
@@ -138,6 +143,36 @@
             localStorage.setItem('current_carta', urlParams.get('id'));
         }
 
+        // Variables del temporizador y control de pausa
+        let timerInterval = null;
+        let secondsPlayed = 0;
+        let isPaused = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(secondsPlayed / 60);
+            const seconds = secondsPlayed % 60;
+            document.getElementById('timerDisplay').innerText = 
+                String(minutes).padStart(2, '0') + ":" + 
+                String(seconds).padStart(2, '0');
+        }
+
+        function startTimer() {
+            document.getElementById('timerDisplay').style.display = 'block';
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    secondsPlayed++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
         // --- SISTEMA DE AUTENTICACIÓN ---
         async function generateCodeChallenge(codeVerifier) {
             const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
@@ -208,23 +243,34 @@
             }
         }
 
-        // --- FUNCIÓN PARA REPRODUCIR ---
+        // --- FUNCIÓN PARA REPRODUCIR / REANUDAR ---
         function reproducir() {
             const token = localStorage.getItem('spotify_token');
             const trackUri = canciones[cartaId];
 
-            fetch('https://api.spotify.com/v1/me/player/play', {
+            let fetchOptions = {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ uris: [trackUri] })
-            }).then(response => {
+                }
+            };
+
+            // Si es la primera vez que se reproduce esta carta, mandamos la orden con la canción.
+            // Si estaba pausada, NO mandamos cuerpo (body) para que Spotify simplemente reanude.
+            if (!isPaused) {
+                fetchOptions.body = JSON.stringify({ uris: [trackUri] });
+                secondsPlayed = 0; // Reiniciamos el temporizador a cero
+                updateTimerDisplay();
+            }
+
+            fetch('https://api.spotify.com/v1/me/player/play', fetchOptions).then(response => {
                 if (response.ok || response.status === 204) {
-                    document.getElementById('info').innerText = "🎵 Reproduciendo...";
-                    document.getElementById('playBtn').style.display = 'none'; // Ocultar Reproducir
-                    document.getElementById('pauseBtn').style.display = 'inline-block'; // Mostrar Pausa
+                    document.getElementById('info').innerText = "🎵 Reproduciendo en secreto...";
+                    document.getElementById('playBtn').style.display = 'none';
+                    document.getElementById('pauseBtn').style.display = 'inline-block';
+                    isPaused = false;
+                    startTimer(); // Arrancamos el cronómetro
                 } else if (response.status === 401) {
                     localStorage.removeItem('spotify_token');
                     alert("El permiso de Spotify ha caducado. Vamos a reconectar.");
@@ -235,7 +281,7 @@
             });
         }
 
-        // --- NUEVA FUNCIÓN PARA PAUSAR ---
+        // --- FUNCIÓN PARA PAUSAR ---
         function pausar() {
             const token = localStorage.getItem('spotify_token');
 
@@ -247,9 +293,11 @@
             }).then(response => {
                 if (response.ok || response.status === 204) {
                     document.getElementById('info').innerText = "⏸ Pista pausada.";
-                    document.getElementById('pauseBtn').style.display = 'none'; // Ocultar Pausa
+                    document.getElementById('pauseBtn').style.display = 'none'; 
                     document.getElementById('playBtn').innerText = "▶️ REANUDAR PISTA"; 
-                    document.getElementById('playBtn').style.display = 'inline-block'; // Mostrar Reproducir
+                    document.getElementById('playBtn').style.display = 'inline-block'; 
+                    isPaused = true;
+                    stopTimer(); // Congelamos el cronómetro
                 }
             });
         }
