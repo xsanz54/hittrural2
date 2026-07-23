@@ -296,7 +296,24 @@
             "carta97": "spotify:track:73SGUxXPloaU5CfeKkJf5D",
             "carta98": "spotify:track:6oGFDrlsSXovBIAY7gNYIq",
             "carta99": "spotify:track:24URRMO355FFEoBfTYxb4p",
-            "carta100": "spotify:track:0VffaI2jwQknRrxpECYHsF"
+            "carta100": "spotify:track:0VffaI2jwQknRrxpECYHsF",
+            "carta101": "spotify:track:2hZfSXDhitRcQcFtfRDF8g",
+            "carta102": "spotify:track:3UyZtf5BzjEYFJkIiIipoH",
+            "carta103": "spotify:track:1dFkD1JfRMzwO6hwUsE8aS",
+            "carta104": "spotify:track:4qPnE8jBZN3wmgGxspsOcP",
+            "carta105": "spotify:track:6VRhkROS2SZHGlp0pxndbJ",
+            "carta106": "spotify:track:52zeJeJrFqKmJBc4FK6767",
+            "carta107": "spotify:track:55SPQmrp0XawJSbBtPelaA",
+            "carta108": "spotify:track:652jfnOkcgGuELRmIulecC",
+            "carta109": "spotify:track:5j0mpQhOd17txGdJKRf2ne",
+            "carta110": "spotify:track:2aWPbnoArRZQwxsgceodTB",
+            "carta111": "spotify:track:5qQhUb1MOFSD3pHVZFgkRm",
+            "carta112": "spotify:track:0g5EKLgdKvNlln7TNqBByK",
+            "carta113": "spotify:track:3N9huFk2IceMSlKoZLaUsv",
+            "carta114": "spotify:track:7BKLCZ1jbUBVqRi2FVlTVw",
+            "carta115": "spotify:track:53N4dEwHT1D6xwebFQ8OtQ",
+            "carta116": "spotify:track:3aQz0z86zrKjd1mcZlonxE",
+            "carta117": "spotify:track:5ASXF1le2xjqkv4MxIOhtd"
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -423,7 +440,7 @@
 
             fetch('https://api.spotify.com/v1/me/player/play', fetchOptions).then(response => {
                 if (response.ok || response.status === 204) {
-                    document.getElementById('info').innerHTML = "<div class='equalizer-container'><div class='equalizer'><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div></div> <span style='font-weight:bold; color:white;'>¡Sonando en secreto!</span></div>";
+                    document.getElementById('info').innerHTML = "<div class='equalizer-container'><div class='equalizer'><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div></div> <span style='font-weight:bold; color:white;'>¡REPRODUCIENDO!</span></div>";
                     
                     document.getElementById('playBtn').style.display = 'none';
                     document.getElementById('pauseBtn').style.display = 'inline-block';
