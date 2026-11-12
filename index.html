@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hitster Festival Edition</title>
     
-    <!-- Importación de las fuentes Bebas Neue y Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@700&display=swap" rel="stylesheet">
     
     <style>
@@ -40,7 +39,6 @@
             transition: background 0.5s ease;
         }
 
-        /* MAGIA FESTIVAL: Animación del fondo cuando está sonando */
         @keyframes festival-bg {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -53,7 +51,6 @@
             animation: festival-bg 4s ease infinite;
         }
 
-        /* Contenedor principal */
         .app-container {
             background-color: var(--card-bg);
             border-radius: 24px;
@@ -87,7 +84,6 @@
             justify-content: center;
         }
 
-        /* Animación del ecualizador de sonido */
         .equalizer-container {
             display: flex;
             align-items: center;
@@ -118,7 +114,6 @@
             100% { height: 16px; }
         }
 
-        /* Botones */
         button { 
             width: 100%;
             padding: 18px 20px; 
@@ -150,7 +145,6 @@
             box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
         }
 
-        /* Botón Siguiente Canción */
         #nextBtn { 
             background-color: #2a2a2a; 
             margin-top: 15px;
@@ -164,7 +158,6 @@
             color: white;
         }
 
-        /* Temporizador con fuente BEBAS NEUE */
         #timerDisplay { 
             font-family: 'Bebas Neue', cursive, sans-serif; 
             font-size: 65px; 
@@ -180,7 +173,7 @@
 
     <div class="app-container">
         <h1>🎧 HITSTER FESTIVAL EDITION</h1>
-        <div id="info">Cargando...</div>
+        <div id="info">Iniciando...</div>
         
         <button id="loginBtn" onclick="login()" style="display:none;">Conectar Spotify</button>
         <button id="playBtn" onclick="reproducir()" style="display:none;">▶️ Reproducir Pista</button>
@@ -188,11 +181,15 @@
         
         <div id="timerDisplay">00:00</div>
 
-        <!-- Nuevo botón de siguiente -->
         <button id="nextBtn" onclick="siguienteCarta()" style="display:none;">📷 SIGUIENTE CANCIÓN</button>
     </div>
 
     <script>
+        // Captura cualquier fallo técnico y lo muestra en pantalla en vez de quedarse colgado
+        window.onerror = function(msg, url, line) {
+            document.getElementById('info').innerHTML = "⚠️ Error técnico (Línea " + line + "):<br>" + msg;
+        };
+
         const clientId = 'df32a706b07c4806b0268f1c18c90503';
         const redirectUri = window.location.origin + window.location.pathname;
 
@@ -253,275 +250,4 @@
             "carta54": "spotify:track:419w8oZaqevgyZfdvFZEHa",
             "carta55": "spotify:track:2U4kPiipwfc2oHmd0nGoj5",
             "carta56": "spotify:track:6Gqr73FGnlhtdBNluxJVJI",
-            "carta57": "spotify:track:6d63QA85w4FXhlXYtz7nco",
-            "carta58": "spotify:track:5YJ4BVvTFmVCxUyhKejHfR",
-            "carta59": "spotify:track:4cyYC67XY3weSVmSLdKLP8",
-            "carta60": "spotify:track:4cdvEShhfVE4UIHcjoK7NA",
-            "carta61": "spotify:track:614NVFo5csQqRnryl4jXs2",
-            "carta62": "spotify:track:1tvdNGCcgAhYaYq7ouIYGJ",
-            "carta63": "spotify:track:17jhIwr7mApkaht65aGH5K",
-            "carta64": "spotify:track:6hpuesKPNa3WhV48O7Fa47",
-            "carta65": "spotify:track:5MRsxkPZyRs1VfnXFdgSHm",
-            "carta66": "spotify:track:2ud5ukcAgwOki5PyE53mPl",
-            "carta67": "spotify:track:2fR4NdUZJditzpS2iBWxiY",
-            "carta68": "spotify:track:17tBEKEKJXnHgJjGrH5rB9",
-            "carta69": "spotify:track:5tMFR1V777V8IdkVVuiV7d",
-            "carta70": "spotify:track:5OcUNWgmDCr6ID4LnYYlup",
-            "carta71": "spotify:track:3oNDynp3Y6F9NvCMqvoxYI",
-            "carta72": "spotify:track:1vVUsYlYEkrZVJWYUvBKUu",
-            "carta73": "spotify:track:5L5kU9WFu7IPZQXzzxaRQV",
-            "carta74": "spotify:track:3ysxSFBKeLfncpMk6yKKYf",
-            "carta75": "spotify:track:5X2QG4l6skcB7BmMeiOh7d",
-            "carta76": "spotify:track:6c0vdY5EZOx8g95uWcp3uI",
-            "carta77": "spotify:track:3jweNemSOUhPyr1330ZXRM",
-            "carta78": "spotify:track:3deLO11zxiXYWpdHlUxNER",
-            "carta79": "spotify:track:5QK32vB1hmlEe1ruP1usFk",
-            "carta80": "spotify:track:4azCAIDvF17pohUA2Jfump",
-            "carta81": "spotify:track:7mc5jjo6PkhbMF9vQzUK3Q",
-            "carta82": "spotify:track:0ZPfoFzZ4qmdyzYmG8whmn",
-            "carta83": "spotify:track:39glqzRVRAy4vq3PqeTGb8",
-            "carta84": "spotify:track:58hjBuGWj43LQ6WjN3ZQAK",
-            "carta85": "spotify:track:4n7jnSxVLd8QioibtTDBDq",
-            "carta86": "spotify:track:6wefD5q8rXOg3xHTUZjyio",
-            "carta87": "spotify:track:3E8WZzcp6nscGt9YvBX9MW",
-            "carta88": "spotify:track:3tFq8IZqLaqnZO0rxbcanH",
-            "carta89": "spotify:track:3tiC6D3N07kUIJXKNDRHjy",
-            "carta90": "spotify:track:4fb0iBhHbQeiJHOfLr6R75",
-            "carta91": "spotify:track:1VB4sadHjFcFklHcZuoROi",
-            "carta92": "spotify:track:42VgiRyg0YjtRVLiPFNxPJ",
-            "carta93": "spotify:track:24UStI5AYA7g5ufFDh3LH0",
-            "carta94": "spotify:track:3hlWUNjAlbZ6nOjAbrivBv",
-            "carta95": "spotify:track:30MdAjBfVTvBCS3vID38At",
-            "carta96": "spotify:track:24UjTh2wPv6g78XeRNbyCQ",
-            "carta97": "spotify:track:73SGUxXPloaU5CfeKkJf5D",
-            "carta98": "spotify:track:6oGFDrlsSXovBIAY7gNYIq",
-            "carta99": "spotify:track:24URRMO355FFEoBfTYxb4p",
-            "carta100": "spotify:track:0VffaI2jwQknRrxpECYHsF",
-            "carta101": "spotify:track:2hZfSXDhitRcQcFtfRDF8g",
-            "carta102": "spotify:track:3UyZtf5BzjEYFJkIiIipoH",
-            "carta103": "spotify:track:1dFkD1JfRMzwO6hwUsE8aS",
-            "carta104": "spotify:track:4qPnE8jBZN3wmgGxspsOcP",
-            "carta105": "spotify:track:6VRhkROS2SZHGlp0pxndbJ",
-            "carta106": "spotify:track:52zeJeJrFqKmJBc4FK6767",
-            "carta107": "spotify:track:55SPQmrp0XawJSbBtPelaA",
-            "carta108": "spotify:track:652jfnOkcgGuELRmIulecC",
-            "carta109": "spotify:track:5j0mpQhOd17txGdJKRf2ne",
-            "carta110": "spotify:track:2aWPbnoArRZQwxsgceodTB",
-            "carta111": "spotify:track:5qQhUb1MOFSD3pHVZFgkRm",
-            "carta112": "spotify:track:0g5EKLgdKvNlln7TNqBByK",
-            "carta113": "spotify:track:3N9huFk2IceMSlKoZLaUsv",
-            "carta114": "spotify:track:7BKLCZ1jbUBVqRi2FVlTVw",
-            "carta115": "spotify:track:53N4dEwHT1D6xwebFQ8OtQ",
-            "carta116": "spotify:track:3aQz0z86zrKjd1mcZlonxE",
-            "carta117": "spotify:track:5ASXF1le2xjqkv4MxIOhtd"
-        };
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        let cartaId = urlParams.get('id') || localStorage.getItem('current_carta');
-
-        if (urlParams.get('id')) {
-            localStorage.setItem('current_carta', urlParams.get('id'));
-        }
-
-        let timerInterval = null;
-        let secondsPlayed = 0;
-        let isPaused = false; 
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(secondsPlayed / 60);
-            const seconds = secondsPlayed % 60;
-            document.getElementById('timerDisplay').innerText = 
-                String(minutes).padStart(2, '0') + ":" + 
-                String(seconds).padStart(2, '0');
-        }
-
-        function startTimer() {
-            document.getElementById('timerDisplay').style.display = 'block';
-            if (!timerInterval) {
-                timerInterval = setInterval(() => {
-                    secondsPlayed++;
-                    updateTimerDisplay();
-                }, 1000);
-            }
-        }
-
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-        }
-
-        async function generateCodeChallenge(codeVerifier) {
-            const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
-            return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-        }
-
-        function generateRandomString(length) {
-            let text = '';
-            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            for (let i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-            return text;
-        }
-
-        async function login() {
-            const verifier = generateRandomString(128);
-            localStorage.setItem('code_verifier', verifier);
-            const challenge = await generateCodeChallenge(verifier);
-            const params = new URLSearchParams({
-                client_id: clientId,
-                response_type: 'code',
-                redirect_uri: redirectUri,
-                scope: 'user-modify-playback-state user-read-playback-state',
-                code_challenge_method: 'S256',
-                code_challenge: challenge
-            });
-            window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
-        }
-
-        async function refrescarToken() {
-            const refreshToken = localStorage.getItem('spotify_refresh_token');
-            if (!refreshToken) return false;
-
-            try {
-                const res = await fetch('https://accounts.spotify.com/api/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        client_id: clientId,
-                        grant_type: 'refresh_token',
-                        refresh_token: refreshToken
-                    })
-                });
-                const data = await res.json();
-                if (data.access_token) {
-                    localStorage.setItem('spotify_token', data.access_token);
-                    if (data.refresh_token) localStorage.setItem('spotify_refresh_token', data.refresh_token);
-                    return true;
-                }
-            } catch (e) {
-                console.error("Error refrescando token:", e);
-            }
-            return false;
-        }
-
-        if (code) {
-            document.getElementById('info').innerText = "Validando conexión...";
-            const verifier = localStorage.getItem('code_verifier');
-            fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    client_id: clientId,
-                    grant_type: 'authorization_code',
-                    code: code,
-                    redirect_uri: redirectUri,
-                    code_verifier: verifier
-                })
-            }).then(r => r.json()).then(data => {
-                if (data.access_token) {
-                    localStorage.setItem('spotify_token', data.access_token);
-                    if (data.refresh_token) localStorage.setItem('spotify_refresh_token', data.refresh_token);
-                    const destino = cartaId ? `${redirectUri}?id=${cartaId}` : redirectUri;
-                    window.location.href = destino;
-                } else {
-                    document.getElementById('info').innerHTML = "Error al obtener permiso.<br>Vuelve a conectar.";
-                    document.getElementById('loginBtn').style.display = 'inline-block';
-                }
-            }).catch(() => {
-                document.getElementById('info').innerHTML = "Error en la conexión.<br>Reinicia la página.";
-            });
-        } else {
-            iniciarApp();
-        }
-
-        function iniciarApp() {
-            const token = localStorage.getItem('spotify_token');
-            if (!token) {
-                document.getElementById('info').innerText = "Conecta la web con Spotify para que la música suene de forma invisible.";
-                document.getElementById('loginBtn').style.display = 'inline-block';
-            } else {
-                if (cartaId && canciones[cartaId]) {
-                    document.getElementById('info').innerText = "Conectando pista...";
-                    document.getElementById('playBtn').style.display = 'inline-block';
-                    // Intento automático de reproducción nada más leer el QR
-                    reproducir(true);
-                } else if (cartaId) {
-                    document.getElementById('info').innerText = "Error: Esta carta no está guardada en el código.";
-                } else {
-                    document.getElementById('info').innerText = "Conectado y listo. Escanea cualquier código QR para empezar.";
-                }
-            }
-        }
-
-        async function obtenerDispositivoActivo(token) {
-            try {
-                const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (!res.ok) return null;
-                const data = await res.json();
-                if (!data.devices || data.devices.length === 0) return null;
-
-                // Prioriza dispositivo activo, si no, coge un Smartphone o el primero disponible
-                const activo = data.devices.find(d => d.is_active);
-                if (activo) return activo.id;
-
-                const movil = data.devices.find(d => d.type.toLowerCase() === 'smartphone');
-                return movil ? movil.id : data.devices[0].id;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async function reproducir(esAuto = false) {
-            let token = localStorage.getItem('spotify_token');
-            const trackUri = canciones[cartaId];
-
-            const deviceId = await obtenerDispositivoActivo(token);
-            const endpoint = deviceId 
-                ? `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`
-                : 'https://api.spotify.com/v1/me/player/play';
-
-            let fetchOptions = {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            };
-
-            if (!isPaused) {
-                fetchOptions.headers['Content-Type'] = 'application/json';
-                fetchOptions.body = JSON.stringify({ uris: [trackUri] });
-                secondsPlayed = 0; 
-                updateTimerDisplay();
-            }
-
-            const response = await fetch(endpoint, fetchOptions);
-
-            if (response.ok || response.status === 204) {
-                document.getElementById('info').innerHTML = "<div class='equalizer-container'><div class='equalizer'><div class='bar'></div><div class='bar'></div><div class='bar'></div><div class='bar'></div></div> <span style='font-weight:bold; color:white;'>¡REPRODUCIENDO!</span></div>";
-                
-                document.getElementById('playBtn').style.display = 'none';
-                document.getElementById('pauseBtn').style.display = 'inline-block';
-                document.getElementById('nextBtn').style.display = 'inline-block';
-                
-                document.body.classList.add('playing-bg');
-                
-                isPaused = false; 
-                startTimer(); 
-            } else if (response.status === 401) {
-                const renovado = await refrescarToken();
-                if (renovado) {
-                    reproducir(esAuto);
-                } else {
-                    localStorage.removeItem('spotify_token');
-                    localStorage.removeItem('spotify_refresh_token');
-                    document.getElementById('info').innerText = "Sesión caducada. Pulsa para reconectar Spotify.";
-                    document.getElementById('playBtn').style.display = 'none';
-                    document.getElementById('loginBtn').style.display = 'inline-block';
-                }
-            } else if (response.status === 404 || response.status === 403) {
-                document.getElementById('playBtn').style.display = 'inline-block';
-                document.getElementById('info').innerHTML = "<b>⚠️ Spotify está dormido.</b><br><br>Abre la app de Spotify 1 segundo, dale al Play y
+            "carta57": "spotify:track:6d63QA85w4FX
