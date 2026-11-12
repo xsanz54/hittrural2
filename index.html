@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hitster Festival Edition</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@700&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --bg-dark: #0a0a0a;
@@ -26,16 +24,16 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body { 
-            background: #121212; 
-            color: var(--text-main); 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            padding: 20px; 
+        body {
+            background: #121212;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
             transition: background 0.5s ease;
         }
 
@@ -72,11 +70,11 @@
             text-transform: uppercase;
         }
 
-        #info { 
-            color: var(--text-muted); 
-            font-size: 16px; 
-            line-height: 1.6; 
-            margin-bottom: 30px; 
+        #info {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
             min-height: 60px;
             display: flex;
             flex-direction: column;
@@ -98,6 +96,7 @@
             gap: 4px;
             margin-right: 10px;
         }
+
         .bar {
             width: 5px;
             background-color: var(--spotify-green);
@@ -114,16 +113,16 @@
             100% { height: 16px; }
         }
 
-        button { 
+        button {
             width: 100%;
-            padding: 18px 20px; 
-            font-size: 16px; 
-            border-radius: 50px; 
-            border: none; 
-            color: white; 
-            font-weight: 700; 
+            padding: 18px 20px;
+            font-size: 16px;
+            border-radius: 50px;
+            border: none;
+            color: white;
+            font-weight: 700;
             letter-spacing: 1px;
-            cursor: pointer; 
+            cursor: pointer;
             transition: all 0.2s ease;
             margin-bottom: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
@@ -134,37 +133,43 @@
         button:active { transform: scale(0.96); }
 
         #loginBtn, #playBtn { background-color: var(--spotify-green); }
-        #loginBtn:hover, #playBtn:hover { 
-            background-color: var(--spotify-green-hover); 
+        #loginBtn:hover, #playBtn:hover {
+            background-color: var(--spotify-green-hover);
             box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
         }
 
         #pauseBtn { background-color: var(--danger-red); }
-        #pauseBtn:hover { 
-            background-color: var(--danger-red-hover); 
+        #pauseBtn:hover {
+            background-color: var(--danger-red-hover);
             box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
         }
 
-        #nextBtn { 
-            background-color: #2a2a2a; 
+        #nextBtn {
+            background-color: #2a2a2a;
             margin-top: 15px;
             font-size: 14px;
             padding: 15px 20px;
             color: #d1d1d1;
         }
-        #nextBtn:hover { 
-            background-color: #3e3e3e; 
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.05);
-            color: white;
+
+        #resetBtn {
+            background: transparent;
+            color: #666;
+            font-size: 12px;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 0;
+            box-shadow: none;
+            text-decoration: underline;
         }
 
-        #timerDisplay { 
-            font-family: 'Bebas Neue', cursive, sans-serif; 
-            font-size: 65px; 
-            margin-top: 10px; 
-            display: none; 
-            color: var(--spotify-green); 
-            text-shadow: 0 0 20px rgba(29, 185, 84, 0.6); 
+        #timerDisplay {
+            font-family: 'Bebas Neue', cursive, sans-serif;
+            font-size: 65px;
+            margin-top: 10px;
+            display: none;
+            color: var(--spotify-green);
+            text-shadow: 0 0 20px rgba(29, 185, 84, 0.6);
             letter-spacing: 4px;
         }
     </style>
@@ -173,7 +178,7 @@
 
     <div class="app-container">
         <h1>🎧 HITSTER FESTIVAL EDITION</h1>
-        <div id="info">Iniciando...</div>
+        <div id="info">Preparando reproductor...</div>
         
         <button id="loginBtn" onclick="login()" style="display:none;">Conectar Spotify</button>
         <button id="playBtn" onclick="reproducir()" style="display:none;">▶️ Reproducir Pista</button>
@@ -182,18 +187,25 @@
         <div id="timerDisplay">00:00</div>
 
         <button id="nextBtn" onclick="siguienteCarta()" style="display:none;">📷 SIGUIENTE CANCIÓN</button>
+        <button id="resetBtn" onclick="resetearSesion()">🔄 Reiniciar conexión Spotify</button>
     </div>
 
+    <!-- Script 1: Detector independiente de errores -->
     <script>
-        // Captura cualquier fallo técnico y lo muestra en pantalla en vez de quedarse colgado
         window.onerror = function(msg, url, line) {
-            document.getElementById('info').innerHTML = "⚠️ Error técnico (Línea " + line + "):<br>" + msg;
+            var box = document.getElementById('info');
+            if (box) {
+                box.innerHTML = "<span style='color:#ff5555;'>Error en línea " + line + ":<br>" + msg + "</span>";
+            }
         };
+    </script>
 
-        const clientId = 'df32a706b07c4806b0268f1c18c90503';
-        const redirectUri = window.location.origin + window.location.pathname;
+    <!-- Script 2: Lógica principal de la aplicación -->
+    <script>
+        var clientId = 'df32a706b07c4806b0268f1c18c90503';
+        var redirectUri = window.location.origin + window.location.pathname;
 
-        const canciones = {
+        var canciones = {
             "carta1": "spotify:track:5dAtKXyrQoQW054LZqJ5dP",
             "carta2": "spotify:track:4biWmzhZc3fDRTXRi0wnRg",
             "carta3": "spotify:track:0FaG2Hc9LSFsuChAC0ZZcM",
@@ -204,50 +216,4 @@
             "carta8": "spotify:track:1UPyhGntpIx9jGJ5UVtKVS",
             "carta9": "spotify:track:2dgjMHEX69zYh9Doxf2BDm",
             "carta10": "spotify:track:31ZO9XuKt48Qb2eUTBynd2",
-            "carta11": "spotify:track:019j8UOaqlO7DAIGwG8QnH",
-            "carta12": "spotify:track:4RexgxVL3yC2Ohx8vdEPqJ",
-            "carta13": "spotify:track:2OSsMwCiZPC44tJ4OPVSZF",
-            "carta14": "spotify:track:2M1mqcNUBIAfRoD2Puhejf",
-            "carta15": "spotify:track:3rgc96C9Ou7qA32hS2FZ6x",
-            "carta16": "spotify:track:52C8aF588mf11VBsSnCdsy",
-            "carta17": "spotify:track:2MxMwKtn5vK7urJf4pb4KR",
-            "carta18": "spotify:track:1FlIzyCvRFQUE4pc7PiaIo",
-            "carta19": "spotify:track:7BqHUALzNBTanL6OvsqmC1",
-            "carta20": "spotify:track:3UidkynpEshXFzYKo5ahAd",
-            "carta21": "spotify:track:7uKjjI2a4Ia8nHKzgdya1y",
-            "carta22": "spotify:track:6D3TI6EZuPtdJZyejGuesp",
-            "carta23": "spotify:track:2IydAl7NltyqyLPOCGtWV3",
-            "carta24": "spotify:track:61Cx5cbYUgDTA2m4SuKJ37",
-            "carta25": "spotify:track:5TPbaf41x9xia1Zf8Zr4Ax",
-            "carta26": "spotify:track:6s7xPlMLMo6FiMli1cMzlZ",
-            "carta27": "spotify:track:6vPJvkEuWZPcv58NnQ3dBR",
-            "carta28": "spotify:track:0vcn58nh8jUjgxy6uIX4GD",
-            "carta29": "spotify:track:7HnJ9niokcVbqLi8FlmcyJ",
-            "carta30": "spotify:track:1tndktY8ZFXapGYIeHUGR2",
-            "carta31": "spotify:track:4FYbo4yQzu3hGkj2Ix4ucW",
-            "carta32": "spotify:track:3aIhJDHxr1kgTSnutJxPTH",
-            "carta33": "spotify:track:1I8tHoNBFTuoJAlh4hfVVE",
-            "carta34": "spotify:track:14QW1Y8ZEJbWkkNAQkPn9M",
-            "carta35": "spotify:track:1y4PL9U8PGfCkwX1wwWYII",
-            "carta36": "spotify:track:4xx4xYffuHfFKsCW6s2KnH",
-            "carta37": "spotify:track:4Jp79uh7FDCzkSEr88zdjm",
-            "carta38": "spotify:track:5VgZzkaaQeW3Kk3hH9k4MT",
-            "carta39": "spotify:track:7yYLIIScUpH76gDKUyFahn",
-            "carta40": "spotify:track:0759rRUMEym1gA2IwslpQd",
-            "carta41": "spotify:track:4pBykn8eWxl3O9JvIHZXj4",
-            "carta42": "spotify:track:39cmB3ZoTOLwOTq7tMNqKa",
-            "carta43": "spotify:track:1s2B5cndbqK8rPJEIcKJRQ",
-            "carta44": "spotify:track:4hZpTCrAVGU04WchCdBuKO",
-            "carta45": "spotify:track:7xHfguzndSR2jOpMxzqh3r",
-            "carta46": "spotify:track:2ewEh7LuvToYyGHq7yT8N1",
-            "carta47": "spotify:track:0tgbSxoFjZ20MjfoKwWevV",
-            "carta48": "spotify:track:1HezRYlgnmN4umk4l9HIPv",
-            "carta49": "spotify:track:6pooRNiLyYpxZeIA5kJ5EX",
-            "carta50": "spotify:track:4BxzNZpcm1j3JczZzGNe2k",
-            "carta51": "spotify:track:0OyHCmkCp2qZJ44ZKB26fX",
-            "carta52": "spotify:track:3EpRJN0najsfQrBCsTtVWI",
-            "carta53": "spotify:track:1q8NdCAQ9QUjpYiqzdd3mv",
-            "carta54": "spotify:track:419w8oZaqevgyZfdvFZEHa",
-            "carta55": "spotify:track:2U4kPiipwfc2oHmd0nGoj5",
-            "carta56": "spotify:track:6Gqr73FGnlhtdBNluxJVJI",
-            "carta57": "spotify:track:6d63QA85w4FX
+            "carta11": "
