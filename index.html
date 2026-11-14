@@ -451,4 +451,68 @@
                     isPaused = false; 
                     startTimer(); 
                 } else if (response.status === 401) {
-                    localStorage.removeItem('spotify_tok
+                    localStorage.removeItem('spotify_token');
+                    alert("El permiso de Spotify ha caducado. Vamos a reconectar.");
+                    login();
+                } else if (response.status === 404 || response.status === 403) {
+                    document.getElementById('info').innerHTML = "<b>⚠️ No encuentro tu reproductor.</b><br><br>Abre Spotify en tu móvil, pon una canción 1 segundo, dale a pausa y vuelve aquí.";
+                }
+            });
+        }
+
+        function pausar() {
+            const token = localStorage.getItem('spotify_token');
+
+            fetch('https://api.spotify.com/v1/me/player/pause', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                if (response.ok || response.status === 204) {
+                    document.getElementById('info').innerText = "⏸ Pista en pausa.";
+                    document.getElementById('pauseBtn').style.display = 'none'; 
+                    document.getElementById('playBtn').innerText = "▶️ Reanudar Pista"; 
+                    document.getElementById('playBtn').style.display = 'inline-block'; 
+                    
+                    document.body.classList.remove('playing-bg');
+                    
+                    isPaused = true; 
+                    stopTimer(); 
+                }
+            });
+        }
+
+        // --- FUNCIÓN SIGUIENTE CARTA ---
+        function siguienteCarta() {
+            const token = localStorage.getItem('spotify_token');
+
+            // 1. Nos aseguramos de pausar la música para que no se solape
+            if (!isPaused) {
+                fetch('https://api.spotify.com/v1/me/player/pause', {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                stopTimer();
+            }
+
+            // 2. Apagamos las luces y ocultamos los botones del reproductor
+            document.body.classList.remove('playing-bg');
+            document.getElementById('playBtn').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('timerDisplay').style.display = 'none';
+
+            // 3. Mostramos el mensaje final indicando que usen la cámara normal
+            document.getElementById('info').innerHTML = `
+                <div style='font-size: 26px; color: var(--spotify-green); margin-bottom: 15px; font-weight: bold;'>
+                    ✅ Pista terminada
+                </div>
+                <div style='font-size: 18px; color: white;'>
+                    Cierra esta pestaña y <b>abre la cámara de tu móvil</b> para escanear la siguiente carta.
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
